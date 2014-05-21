@@ -1,0 +1,13 @@
+{
+    "name": "docx/sdk",
+    "description": "sdk for docx generation",
+    "authors": [
+        {
+            "name": "docx",
+            "email": "hipp.edg@gmail.com"
+        }
+    ],
+    "require": {
+
+    }
+}
