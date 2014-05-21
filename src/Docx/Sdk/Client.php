@@ -15,7 +15,7 @@ use GuzzleHttp\Post\PostFile;
 
 class Client {
     private $key="";
-    private $endpoint="http://localhost:3000/api";
+    private $endpoint="http://docxgenapi.herokuapp.com/api/v1";
 
     function __construct()
     {
@@ -29,7 +29,7 @@ class Client {
 
     public function getTemplates()
     {
-        return $this->guzzleClient->get($this->endpoint."/templates/?key=".$this->key)->json();
+        return $this->guzzleClient->get($this->endpoint."/templates?key=".$this->key)->json();
     }
 
     public function getTemplate($name)
@@ -47,7 +47,7 @@ class Client {
 
     public function addTemplate($filename,$content)
     {
-        return $this->guzzleClient->post($this->endpoint."/templates/?filename=".$filename."&key=".$this->key,[
+        return $this->guzzleClient->post($this->endpoint."/templates?filename=".$filename."&key=".$this->key,[
             "body"=>
                 ['file'=>new PostFile('file',$content)]
         ])->json();
