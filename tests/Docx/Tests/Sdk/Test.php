@@ -21,8 +21,18 @@ class Test extends \PHPUnit_Framework_TestCase {
 
     public function testGetTemplates()
     {
-        var_dump($this->client->getTemplates());
+        $expected= ["LastModified"=>"2014-05-21T15:52:48.000Z","Size"=>19424,"Name"=>"sample.docx"];
+        $this->assertEquals($expected,$this->client->getTemplates()[0]);
+    }
 
+    public function testGetTemplate()
+    {
+        file_put_contents("copy.docx",$this->client->getTemplate("sample.docx"));
+    }
+
+    public function testGenerateFromTemplate()
+    {
+        file_put_contents("generated.docx",$this->client->generate("sample.docx",[]));
     }
 
 }

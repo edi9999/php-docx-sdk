@@ -1,7 +1,6 @@
 <?php
 
 namespace Docx\Sdk;
-use GuzzleHttp;
 
 /**
  * Created by PhpStorm.
@@ -11,6 +10,7 @@ use GuzzleHttp;
  */
 
 
+use GuzzleHttp\Client as GuzzleClient;
 
 class Client {
     private $key="";
@@ -18,9 +18,8 @@ class Client {
 
     function __construct()
     {
-        $this->guzzleClient=new \GuzzleHttp\Client();
+        $this->guzzleClient=new GuzzleClient();
     }
-
 
     public function setKey($key)
     {
@@ -34,17 +33,17 @@ class Client {
 
     public function getTemplate($name)
     {
-        return $this->guzzleClient->get($this->endpoint."/templates/".$name."?key=".$this->key);
-    }
-
-
-    public function addTemplate($name,$file)
-    {
-        return $this->guzzleClient->post($this->endpoint."/templates/".$name."?key=".$this->key);
+        return $this->guzzleClient->get($this->endpoint."/templates/".$name."?key=".$this->key)->getBody()->__toString();
     }
 
     public function generate($name,$data)
     {
-        return $this->guzzleClient->post($this->endpoint."/generate/".$name."?key=".$this->key);
+        return $this->guzzleClient->post($this->endpoint."/generate/".$name."?key=".$this->key)->getBody()->__toString();
     }
+
+    public function addTemplate($name,$file)
+    {
+        return $this->guzzleClient->post($this->endpoint."/templates/".$name."?key=".$this->key)->getJson();
+    }
+
 }
