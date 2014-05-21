@@ -22,8 +22,9 @@ class Test extends \PHPUnit_Framework_TestCase {
     public function testGetTemplates()
     {
         $expected= ["Size"=>19424,"Name"=>"sample.docx"];
-        $this->assertEquals($expected["Size"],$this->client->getTemplates()[0]["Size"]);
-        $this->assertEquals($expected["Name"],$this->client->getTemplates()[0]["Name"]);
+        $result=$this->client->getTemplates();
+        $this->assertEquals($expected["Size"],$result[0]["Size"]);
+        $this->assertEquals($expected["Name"],$result[0]["Name"]);
     }
 
     public function testGetTemplate()
@@ -44,6 +45,15 @@ class Test extends \PHPUnit_Framework_TestCase {
 			];
 
         file_put_contents("generated.docx",$this->client->generate("sample.docx",$tagData));
+    }
+
+    public function testAddTemplate()
+    {
+        $expected= ["Size"=>19424,"Name"=>"sample.docx"];
+        $result=$this->client->addTemplate("sample.docx",file_get_contents("sample.docx"));
+        $this->assertEquals($expected["Size"],$result["Size"]);
+        $this->assertEquals($expected["Name"],$result["Name"]);
+
     }
 
 }

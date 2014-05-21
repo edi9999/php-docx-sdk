@@ -11,6 +11,7 @@ namespace Docx\Sdk;
 
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Post\PostFile;
 
 class Client {
     private $key="";
@@ -38,12 +39,17 @@ class Client {
 
     public function generate($name,$data)
     {
-        return $this->guzzleClient->post($this->endpoint."/generate/".$name."?key=".$this->key)->getBody()->__toString();
+        return $this->guzzleClient->post($this->endpoint."/generate/".$name."?key=".$this->key,[
+            "body"=>json_encode($data),
+            "headers"=>["content-type"=>"application/json"]
+        ])->getBody()->__toString();
     }
 
-    public function addTemplate($name,$file)
+    public function addTemplate($filename,$content)
     {
-        return $this->guzzleClient->post($this->endpoint."/templates/".$name."?key=".$this->key)->getJson();
+        return $this->guzzleClient->post($this->endpoint."/templates/?filename=".$filename."&key=".$this->key,[
+            "body"=>
+                ['file'=>new PostFile('file',$content)]
+        ])->json();
     }
-
 }
