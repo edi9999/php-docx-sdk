@@ -10,21 +10,32 @@
 namespace Docx\Tests\Sdk;
 
 use Docx\Sdk;
+use Docx\Sdk\Client;
 
 class Test extends \PHPUnit_Framework_TestCase {
 
     public function setUp()
     {
-        $this->client=new \Docx\Sdk\Client();
-        $this->client->setKey("a457f87f54a654a87fd89aeff");
+        Client::setKey("a457f87f54a654a87fd89aeff");
+        $this->client=new Client();
     }
 
     public function testGetTemplates()
     {
-        $expected= ["Size"=>19424,"Name"=>"sample.docx"];
+        $expected= [[
+            "Size"=>19424,"Name"=>"acme/sample.docx"
+        ],[
+            "Size"=>19424,"Name"=>"sample.docx"
+        ]
+        ];
         $result=$this->client->getTemplates();
-        $this->assertEquals($expected["Size"],$result[0]["Size"]);
-        $this->assertEquals($expected["Name"],$result[0]["Name"]);
+        $this->assertEquals(2,count($result));
+
+        $this->assertEquals($expected[0]["Size"],$result[0]["Size"]);
+        $this->assertEquals($expected[0]["Name"],$result[0]["Name"]);
+
+        $this->assertEquals($expected[1]["Size"],$result[1]["Size"]);
+        $this->assertEquals($expected[1]["Name"],$result[1]["Name"]);
     }
 
     public function testGetTemplate()
@@ -53,8 +64,16 @@ class Test extends \PHPUnit_Framework_TestCase {
         $result=$this->client->addTemplate("sample.docx",file_get_contents("sample.docx"));
         $this->assertEquals($expected["Size"],$result["Size"]);
         $this->assertEquals($expected["Name"],$result["Name"]);
-
     }
 
+    public function testAddTemplateWithFolder()
+    {
+        $expected= ["Size"=>19424,"Name"=>"sample.docx","Folder"=>"acme"];
+        Client::setFolder("acme");
+        $result=$this->client->addTemplate("sample.docx",file_get_contents("sample.docx"));
+        $this->assertEquals($expected["Size"],$result["Size"]);
+        $this->assertEquals($expected["Name"],$result["Name"]);
+        $this->assertEquals($expected["Folder"],$result["Folder"]);
+        Client::setFolder("");
+    }
 }
- 

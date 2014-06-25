@@ -14,42 +14,67 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Post\PostFile;
 
 class Client {
-    private $key="";
+
+    public static $key="";
+    public static $folder="";
     private $endpoint="http://docxgenapi.herokuapp.com/api/v1";
+    private $queryParams=[];
 
     function __construct()
     {
         $this->guzzleClient=new GuzzleClient();
+        $this->folder=null;
     }
 
-    public function setKey($key)
+    public static function setKey($key)
     {
-        $this->key=$key;
+        self::$key=$key;
+    }
+
+    public static function setFolder($folder)
+    {
+        self::$folder=$folder;
     }
 
     public function getTemplates()
     {
-        return $this->guzzleClient->get($this->endpoint."/templates?key=".$this->key)->json();
+        $this->queryParams['key']=self::$key;
+        return $this->guzzleClient->get($this->endpoint."/templates",
+            [
+                "query"=>$this->queryParams
+            ])->json();
     }
 
     public function getTemplate($name)
     {
-        return $this->guzzleClient->get($this->endpoint."/templates/".$name."?key=".$this->key)->getBody()->__toString();
+        $this->queryParams['key']=self::$key;
+        $this->queryParams['folder']=self::$folder;
+        return $this->guzzleClient->get($this->endpoint."/templates/".$name,
+            [
+                "query"=>$this->queryParams
+            ])->getBody()->__toString();
     }
 
     public function generate($name,$data)
     {
-        return $this->guzzleClient->post($this->endpoint."/generate/".$name."?key=".$this->key,[
+        $this->queryParams['key']=self::$key;
+        $this->queryParams['folder']=self::$folder;
+        return $this->guzzleClient->post($this->endpoint."/generate/".$name,[
             "body"=>json_encode($data),
-            "headers"=>["content-type"=>"application/json"]
+            "headers"=>["content-type"=>"application/json"],
+            "query"=>$this->queryParams
         ])->getBody()->__toString();
     }
 
     public function addTemplate($filename,$content)
     {
-        return $this->guzzleClient->post($this->endpoint."/templates?filename=".$filename."&key=".$this->key,[
-            "body"=>
-                ['file'=>new PostFile('file',$content)]
-        ])->json();
+        $this->queryParams['key']=self::$key;
+        $this->queryParams['folder']=self::$folder;
+        $this->queryParams['filename']=$filename;
+        return $this->guzzleClient->post($this->endpoint."/templates",
+            [
+                "body"=> ['file'=>new PostFile('file',$content)],
+                "query"=>$this->queryParams
+            ])->json();
     }
 }
