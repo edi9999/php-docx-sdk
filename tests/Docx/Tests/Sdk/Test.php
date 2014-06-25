@@ -9,7 +9,6 @@
 
 namespace Docx\Tests\Sdk;
 
-use Docx\Sdk;
 use Docx\Sdk\Client;
 
 class Test extends \PHPUnit_Framework_TestCase {

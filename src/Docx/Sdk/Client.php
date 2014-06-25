@@ -23,7 +23,6 @@ class Client {
     function __construct()
     {
         $this->guzzleClient=new GuzzleClient();
-        $this->folder=null;
     }
 
     public static function setKey($key)
