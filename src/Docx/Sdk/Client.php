@@ -58,11 +58,17 @@ class Client {
     {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
-        return $this->guzzleClient->post($this->endpoint."/generate/".$name,[
-            "body"=>json_encode($data),
-            "headers"=>["content-type"=>"application/json"],
-            "query"=>$this->queryParams
-        ])->getBody()->__toString();
+        try{
+            return $this->guzzleClient->post($this->endpoint."/generate/".$name,[
+                "body"=>json_encode($data),
+                "headers"=>["content-type"=>"application/json"],
+                "query"=>$this->queryParams
+            ]);
+        }
+        catch (ClientException $exception) {
+            $response=$exception->getResponse()->json();
+            throw new Exception($response);
+        }
     }
 
     public function addTemplate($filename,$content)
