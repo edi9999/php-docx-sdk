@@ -12,6 +12,7 @@ namespace Docx\Sdk;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Post\PostFile;
+use GuzzleHttp\Exception\ClientException;
 
 class Client {
 
