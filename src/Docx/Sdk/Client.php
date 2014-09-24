@@ -68,7 +68,7 @@ class Client {
         }
         catch (ClientException $exception) {
             $response=$exception->getResponse()->json();
-            throw new Exception($response);
+            throw new InvalidTagsException($response["error_message"]);
         }
     }
 
