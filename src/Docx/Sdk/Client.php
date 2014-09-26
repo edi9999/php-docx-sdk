@@ -52,7 +52,7 @@ class Client {
         return $this->guzzleClient->get($this->endpoint."/templates/".$name,
             [
                 "query"=>$this->queryParams
-            ])->getBody()->__toString();
+            ])->getBody();
     }
 
     public function generate($name,$data)
@@ -60,11 +60,12 @@ class Client {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
         try{
-            return $this->guzzleClient->post($this->endpoint."/generate/".$name,[
+            $postResponse=$this->guzzleClient->post($this->endpoint."/generate/".$name,[
                 "body"=>json_encode($data),
                 "headers"=>["content-type"=>"application/json"],
                 "query"=>$this->queryParams
             ]);
+            return $postResponse->getBody();
         }
         catch (ClientException $exception) {
             $response=$exception->getResponse()->json();

@@ -54,7 +54,9 @@ class Test extends \PHPUnit_Framework_TestCase {
 				"description" => "New Website"
 			];
 
-        file_put_contents("generated.docx",$this->client->generate("sample.docx",$tagData));
+        $generatedContent=$this->client->generate("sample.docx",$tagData);
+        file_put_contents("generated.docx",$generatedContent);
+        $this->assertEquals(strlen($generatedContent),68345);
     }
 
     public function testAddTemplate()
