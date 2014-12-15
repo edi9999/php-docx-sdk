@@ -18,7 +18,7 @@ class Client {
 
     public static $key="";
     public static $folder="";
-    private $endpoint="http://docxgenapi.herokuapp.com/api/v1";
+    public static $endpoint="http://docxgenapi.herokuapp.com/api/v1";
     private $queryParams=[];
 
     function __construct()
@@ -36,10 +36,15 @@ class Client {
         self::$folder=$folder;
     }
 
+    public static function setUrl($endpoint)
+    {
+        self::$endpoint=$endpoint;
+    }
+
     public function getTemplates()
     {
         $this->queryParams['key']=self::$key;
-        return $this->guzzleClient->get($this->endpoint."/templates",
+        return $this->guzzleClient->get(self::$endpoint."/templates",
             [
                 "query"=>$this->queryParams
             ])->json();
@@ -49,7 +54,7 @@ class Client {
     {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
-        return $this->guzzleClient->get($this->endpoint."/templates/".$name,
+        return $this->guzzleClient->get(self::$endpoint."/templates/".$name,
             [
                 "query"=>$this->queryParams
             ])->getBody();
@@ -60,7 +65,7 @@ class Client {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
         try{
-            $postResponse=$this->guzzleClient->post($this->endpoint."/generate/".$name,[
+            $postResponse=$this->guzzleClient->post(self::$endpoint."/generate/".$name,[
                 "body"=>json_encode($data),
                 "headers"=>["content-type"=>"application/json"],
                 "query"=>$this->queryParams
@@ -78,7 +83,7 @@ class Client {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
         $this->queryParams['filename']=$filename;
-        return $this->guzzleClient->post($this->endpoint."/templates",
+        return $this->guzzleClient->post(self::$endpoint."/templates",
             [
                 "body"=> ['file'=>new PostFile('file',$content)],
                 "query"=>$this->queryParams
