@@ -60,9 +60,14 @@ class Client {
             ])->getBody();
     }
 
-    public function generate($name,$data)
+    public function generate($name,$data,$pptx=false)
     {
         $this->queryParams['key']=self::$key;
+        $this->queryParams['folder']=self::$folder;
+
+        if ($pptx)
+            $this->queryParams['pptx']='true';
+
         $this->queryParams['folder']=self::$folder;
         try{
             $postResponse=$this->guzzleClient->post(self::$endpoint."/generate/".$name,[
