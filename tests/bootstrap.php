@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: edgar
- * Date: 4/25/14
- * Time: 6:52 PM
- */
+
 use Composer\Autoload\ClassLoader;
 
 /** @var ClassLoader $loader */

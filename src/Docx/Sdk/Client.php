@@ -2,23 +2,14 @@
 
 namespace Docx\Sdk;
 
-/**
- * Created by PhpStorm.
- * User: edgar
- * Date: 21/05/14
- * Time: 18:42
- */
-
-
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Post\PostFile;
 use GuzzleHttp\Exception\ClientException;
 
 class Client {
 
     public static $key="";
     public static $folder="";
-    public static $endpoint="http://docxgenapi.herokuapp.com/api/v1";
+    public static $endpoint="http://docxapi.beequick.fr/api/v1";
     private $queryParams=[];
 
     function __construct()
@@ -44,10 +35,11 @@ class Client {
     public function getTemplates()
     {
         $this->queryParams['key']=self::$key;
-        return $this->guzzleClient->get(self::$endpoint."/templates",
+        $response = $this->guzzleClient->get(self::$endpoint."/templates",
             [
                 "query"=>$this->queryParams
-            ])->json();
+            ]);
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function getTemplate($name)
@@ -88,10 +80,17 @@ class Client {
         $this->queryParams['key']=self::$key;
         $this->queryParams['folder']=self::$folder;
         $this->queryParams['filename']=$filename;
-        return $this->guzzleClient->post(self::$endpoint."/templates",
+        $response = $this->guzzleClient->post(self::$endpoint."/templates",
             [
-                "body"=> ['file'=>new PostFile('file',$content)],
+                "multipart"=> [
+                    [
+                        'name'=>'file',
+                        'contents'=> $content,
+                        'filename'=>'file'
+                    ]
+                ],
                 "query"=>$this->queryParams
-            ])->json();
+            ]);
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

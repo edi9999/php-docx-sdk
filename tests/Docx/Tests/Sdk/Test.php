@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: edgar
- * Date: 21/05/14
- * Time: 18:52
- */
-
 
 namespace Docx\Tests\Sdk;
 
@@ -48,15 +41,15 @@ class Test extends \PHPUnit_Framework_TestCase {
     public function testGenerateFromTemplate()
     {
         $tagData=[
-				"first_name"  => "Glou",
-				"last_name"   => "Edgar",
-				"phone"       => "0652455478",
-				"description" => "New Website"
-			];
+            "first_name"  => "Gla",
+            "last_name"   => "Edgar",
+            "phone"       => "0652455478",
+            "description" => "New Website"
+        ];
 
         $generatedContent=$this->client->generate("sample.docx",$tagData);
         file_put_contents("generated.docx",$generatedContent);
-        $this->assertEquals(strlen($generatedContent),17328);
+        $this->assertEquals(strlen($generatedContent),17283);
     }
 
     public function testAddTemplate()
