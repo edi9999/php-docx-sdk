@@ -70,7 +70,7 @@ class Client {
             return $postResponse->getBody();
         }
         catch (ClientException $exception) {
-            $response=$exception->getResponse()->json();
+            $response = json_decode($exception->getResponse()->getBody()->getContents(), true);
             throw new InvalidTagsException($response["error_message"]);
         }
     }

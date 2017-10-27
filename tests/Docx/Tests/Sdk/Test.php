@@ -17,17 +17,21 @@ class Test extends \PHPUnit_Framework_TestCase {
         $expected= [[
             "Size"=>19424,"Name"=>"acme/sample.docx"
         ],[
-            "Size"=>19424,"Name"=>"sample.docx"
-        ]
-        ];
+            "Size"=>4193,"Name"=>"error.docx"
+        ],[
+            "Size"=>4193,"Name"=>"error.docx"
+        ]];
         $result=$this->client->getTemplates();
-        $this->assertEquals(2,count($result));
+        $this->assertEquals(3,count($result));
 
-        $this->assertEquals($expected[0]["Size"],$result[0]["Size"]);
-        $this->assertEquals($expected[0]["Name"],$result[0]["Name"]);
+        $this->assertEquals(19424,$result[0]["Size"]);
+        $this->assertEquals("acme/sample.docx",$result[0]["Name"]);
 
-        $this->assertEquals($expected[1]["Size"],$result[1]["Size"]);
-        $this->assertEquals($expected[1]["Name"],$result[1]["Name"]);
+        $this->assertEquals(4193,$result[1]["Size"]);
+        $this->assertEquals("error.docx",$result[1]["Name"]);
+
+        $this->assertEquals(19424,$result[2]["Size"]);
+        $this->assertEquals("sample.docx",$result[2]["Name"]);
     }
 
     public function testGetTemplate()
@@ -50,6 +54,17 @@ class Test extends \PHPUnit_Framework_TestCase {
         $generatedContent=$this->client->generate("sample.docx",$tagData);
         file_put_contents("generated.docx",$generatedContent);
         $this->assertEquals(strlen($generatedContent),17283);
+    }
+
+    public function testGenerateError()
+    {
+        $tagData=[
+        ];
+
+        $result=$this->client->addTemplate("error.docx",file_get_contents("error.docx"));
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Scope parser execution');
+        $generatedContent=$this->client->generate("error.docx",$tagData);
     }
 
     public function testAddTemplate()
